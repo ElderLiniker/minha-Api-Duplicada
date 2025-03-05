@@ -34,6 +34,6 @@ routes.post("/orders", OrderController.store)
 routes.get("/orders", OrderController.index)
 
 
-routes.post("/create-payment-intent",CreatePaymentIntentController.store)
+routes.post("/create-payment-intent", CreatePaymentIntentController.store)
 
 export default routes;

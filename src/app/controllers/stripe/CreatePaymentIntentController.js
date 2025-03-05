@@ -1,16 +1,15 @@
-const Stripe = require("stripe")
-const Yup = require("yup");
-require("dotenv").config();
 
+import * as Yup from 'yup'
+import Stripe from 'stripe';
 
+import 'dotenv/config';
 
+const stripe = new Stripe(process.env.STRIPE_SECRET_KEY);
 
-
-
-const stripe = new Stripe(process.env.STRIPE_SERCRET_KEY)
 
 const calculateOrderAmount = (items) => {
-    const total = items.reduce((acc, current) => { return current.price * current.quantity 
+    const total = items.reduce((acc, current) => {
+        return current.price * current.quantity + acc
 
     }, 0)
 
@@ -39,7 +38,7 @@ class CreatePaymentIntentController {
 
         }
 
-        const {products} = request.body
+        const { products } = request.body
 
         const amount = calculateOrderAmount(products)
 
@@ -49,16 +48,16 @@ class CreatePaymentIntentController {
             amount,
             currency: 'brl',
             automatic_payment_methods: {
-              enabled: true,
+                enabled: true,
             },
-          });
-      
-          response.json({
+        });
+
+        response.json({
             clientSecret: paymentIntent.client_secret,
             dpmCheckerLink: `https://dashboard.stripe.com/settings/payment_methods/review?transaction_id=${paymentIntent.id}`,
-          });
+        });
     }
 
 }
 
-module.exports = new CreatePaymentIntentController();
+export default new CreatePaymentIntentController();
